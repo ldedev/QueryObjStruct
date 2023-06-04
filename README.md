@@ -6,6 +6,21 @@ QueryObjStruct It allows us to perform queries in a json (only for now), yaml an
 
 And the expectations are that it is not necessary to change anything in the queries, just inform the structure of the object.
 
+## Funcionalidades
+
+- [X] Estrutura JSON
+- [ ] Estrutura YAML
+- [ ] Estrutura TOML
+- [X] Multiplataforma
+- [X] Consultas em chaves simples
+- [X] Consultas em chaves compostas
+- [X] Uso de funções em consultas(Apenas 4 por enquanto)
+- [X] Consultas em arrays
+- [X] Consultas em arrays de objetos
+- [X] Preview em tempo real
+- [ ] Temas dark e light(Apenas automático por enquanto)
+
+
 
 ## Documentation
 
