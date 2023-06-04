@@ -1,12 +1,13 @@
 module entities
 
 import x.json2
-import contracts { IToken, TypeToken }
+import contracts { TypeToken, IArgument }
 import functions
 
 pub struct Token {
 pub mut:
 	value string
+	arguments []IArgument
 	typ   TypeToken = .undefined
 }
 
@@ -27,15 +28,13 @@ pub fn (tokens []Token) generate_code(json json2.Any) string {
 	if json.as_map().len == 0 {
 		return '{}'
 	} else {
-		mut i := 0
+		mut i := -1
 		for {
 			i++
-			if i >= tokens.len {
-				break
-			}
-			token := tokens[i]
+			if i >= tokens.len { break }
+			token := tokens[i] or { tokens.last() }
 
-			if token.typ == .object_root {
+			if token.typ in [.object_root, .object] {
 				continue
 			} else if token.typ == .key {
 				if token.value in json_work.as_map() {
@@ -68,7 +67,7 @@ pub fn (tokens []Token) generate_code(json json2.Any) string {
 							continue
 						}
 
-						i += 2
+						i += 3
 						add_path(next_token.value)
 
 						mut temp := []json2.Any{}
@@ -79,6 +78,7 @@ pub fn (tokens []Token) generate_code(json json2.Any) string {
 							}
 						}
 
+						dump(temp)
 						json_work = temp
 					} else {
 						json_work = arr
@@ -87,13 +87,8 @@ pub fn (tokens []Token) generate_code(json json2.Any) string {
 			} else if token.typ == .function {
 				if token.value in functions.builtin_functions {
 					add_path(token.value)
-					if tokens.len >= i + 2 {
-						if next_token := tokens[i + 2..tokens.len][0] {
-							i += 2
-							func := functions.builtin_functions[token.value]
-							json_work = func(json_work, &next_token)
-						}
-					}
+
+					json_work = functions.builtin_functions[token.value](json_work, token)
 				} else {
 					return json2.encode({
 						'path':  get_path()
@@ -102,9 +97,6 @@ pub fn (tokens []Token) generate_code(json json2.Any) string {
 				}
 			}
 		}
-
-		// println('Depois: ')
-		// dump(json_work)
 	}
 
 	return json_work.str()

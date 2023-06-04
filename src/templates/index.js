@@ -17,7 +17,13 @@
         editorJson.session.setMode("ace/mode/json");
 
         //temp
-        editorJson.setValue('{"Teste":[{"discount":0.3},{"discount":2.33}]}');
+        editorJson.setValue('[{"nome":"Selic","valor":13.75},{"nome":"CDI","valor":13.65},{"nome":"IPCA","valor":4.18}]');
+
+        document.getElementsByName('query')[0].addEventListener('keydown', (e) =>
+        {
+            if (e.keyCode == 13)
+                RunQuery();
+        });
 
         function validAndReturnCode() {
             try {
@@ -31,7 +37,7 @@
         }
 
         function RunQuery() {
-            let query = document.getElementsByName('name')[0].value;
+            let query = document.getElementsByName('query')[0].value;
 
             axios(
                 {
