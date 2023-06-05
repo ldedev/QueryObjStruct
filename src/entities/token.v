@@ -1,14 +1,15 @@
+// fmt off
 module entities
 
 import x.json2
-import contracts { TypeToken, IArgument }
+import contracts { IArgument, TypeToken }
 import functions
 
 pub struct Token {
 pub mut:
-	value string
+	value     string
 	arguments []IArgument
-	typ   TypeToken = .undefined
+	typ       TypeToken = .undefined
 }
 
 pub fn (tokens []Token) generate_code(json json2.Any) string {
@@ -31,7 +32,9 @@ pub fn (tokens []Token) generate_code(json json2.Any) string {
 		mut i := -1
 		for {
 			i++
-			if i >= tokens.len { break }
+			if i >= tokens.len {
+				break
+			}
 			token := tokens[i] or { tokens.last() }
 
 			if token.typ in [.object_root, .object] {
@@ -88,7 +91,8 @@ pub fn (tokens []Token) generate_code(json json2.Any) string {
 				if token.value in functions.builtin_functions {
 					add_path(token.value)
 
-					json_work = functions.builtin_functions[token.value](json_work, token)
+					json_work = functions.builtin_functions[token.value](json_work,
+						token)
 				} else {
 					return json2.encode({
 						'path':  get_path()

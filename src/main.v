@@ -4,7 +4,6 @@ import x.json2
 import vweb
 import regex
 import entities
-import functions
 
 struct App {
 	vweb.Context
@@ -46,10 +45,9 @@ fn (mut app App) submit() vweb.Result {
 
 	tokens_str := re.find_all_str(resp_query.query)
 
-	dump(tokens_str)
+	// dump(tokens_str)
 	s := entities.clasify_tokens(tokens_str)
 		.generate_code(code)
 
 	return app.text(s)
-
 }
